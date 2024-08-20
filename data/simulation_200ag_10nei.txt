@@ -1,9 +1,0 @@
-method	agents	neighbour	iteration	tax_rate	dd	ds	pa	tr	cy
-1	winner_loser	200	10	1	0	890	808	370	410	4
-2	winner_loser	200	10	20	0	767	39	0	0	0
-3	winner_loser	200	10	1	0.1	397	697	377	231	13
-4	winner_loser	200	10	20	0.1	823	889	402	387	4
-5	null	200	10	1	0	275	275	588	101	38
-6	null	200	10	20	0	254	258	506	97	36
-7	null	200	10	1	0.1	269	266	503	90	32
-8	null	200	10	20	0.1	224	257	482	56	33
