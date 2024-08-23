@@ -1,48 +1,30 @@
 hnl = new.env()
-hnl$new <- function (n,token=rep(5,n)) {
-    self=hnl
-    self$token=token
-    self$Coop = matrix(0,nrow=n,ncol=n)
+hnl$new <- function (n, token = rep(5, n)) {
+  self = hnl
+  self$token = token
+  self$Coop = matrix(0, nrow = n, ncol = n)
 }
 
+# replaced nested loops with vectorized operations
 hnl$coop <- function () {
-    self=hnl
-    n = nrow(self$Coop)
-    p=0
-    for (i in 1:(n-1)) {
-        for (j in (i+1):n) {
-            if (self$Coop[i,j] == 1) {
-                ## 20% chance to divide
-                p=rbinom(1,1,p=0.2)
-                if (p == 1) {
-                    self$Coop[i,j] = self$Coop[j,i] = 0
-                }
-            } else {
-                ## pairing 0.0 (<4 token) to 0.1 (13 or more token) percent
-                ##  unpaired?
-                if (sum(self$Coop[c(i,j),]) == 0) {
-                    chance=min(c(self$token[i],self$token[j]))
-                    if (chance>13) {
-                        chance=13
-                    } else if (chance>3) {
-                        chance=0.0+0.2*((chance-3)/10)
-                        p=rbinom(1,1,p=chance)
-                    } else {
-                        p=0
-                    }
-                    if (p == 1) {
-                        self$Coop[i,j] = self$Coop[j,i] = 1
-                        self$token[i]=self$token[i]-2
-                        self$token[j]=self$token[j]-2
-                        idx=sample(1:n,4,replace=TRUE)
-                        for (k in idx) {
-                            self$token[k]=self$token[k]+1
-                        }
-                    }
-                }
-            }
-        }
-    }
+  self = hnl
+  n = nrow(self$Coop)
+  
+  lower_triangle <- lower.tri(self$Coop)
+  unpaired <- which(self$Coop == 0 & lower_triangle, arr.ind = TRUE)
+  
+  # determine chance for each unpaired relationship
+  token_pairs <- pmin(self$token[unpaired[, 1]], self$token[unpaired[, 2]])
+  pair_chances <- ifelse(token_pairs > 13, 0.1, ifelse(token_pairs > 3, 0.2 * ((token_pairs - 3) / 10), 0))
+  
+  # pair or unpair based on calculated chances
+  to_pair <- runif(length(pair_chances)) < pair_chances
+  self$Coop[unpaired[to_pair, , drop = FALSE]] <- 1
+  
+  # unpair logic for existing pairs
+  paired <- which(self$Coop == 1 & lower_triangle, arr.ind = TRUE)
+  to_unpair <- runif(nrow(paired)) < 0.2
+  self$Coop[paired[to_unpair, , drop = FALSE]] <- 0
 }
 
 
