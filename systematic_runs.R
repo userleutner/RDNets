@@ -6,25 +6,40 @@ source("functions/add_row.R")
 # ------------------------------
 
 
+
 # flexible parameters for simulation
-initial_seed <- 123  
-tax_rates <- c(0.0, 0.05, 0.1, 0.3)  # tax rates to apply
+initial_seed <- 123  # Initial seed for reproducibility
+tax_rates <- c(0.0, 0.05, 0.1, 0.3) 
 models <- c("null", "winlo") # Null Model an Winner Loser Model
 individuals <- c(10, 20, 50, 100, 200)
-base_path <- "/images/systematic/" # path to safe generated data
-num_runs <- 5  
-# -----------------------------------------------------------
-
-# collecting triad data
+base_path <- "images/systematic/" # path to safe generated image data
+num_runs <- 5
+# df for collecting triad data
 triad1 <- data.frame()
 
 # loop through all combinations of parameters
 for (run_num in 1:num_runs) {
-  run_seed <- initial_seed + run_num  # Adjust seed for each run
+  run_seed <- initial_seed + run_num  # adjust seed for each run
   set.seed(run_seed)
   
   for (tax_rate in tax_rates) {
     tax_str <- sprintf("tax%02d", as.integer(tax_rate * 100))
+    
+    # directory structure
+    run_dir <- file.path(base_path, sprintf("run%d", run_num))
+    tax_dir <- file.path(run_dir, tax_str)
+    data_dir <- file.path("data")
+    if (!dir.exists(run_dir)) {
+      dir.create(run_dir, recursive = TRUE)
+    }
+    if (!dir.exists(tax_dir)) {
+      dir.create(tax_dir, recursive = TRUE)
+    }
+    if (!dir.exists(data_dir)) {
+      dir.create(data_dir, recursive = TRUE)
+    }
+    
+    triad1 <- data.frame()
     
     for (model in models) {
       
@@ -32,22 +47,16 @@ for (run_num in 1:num_runs) {
         
         num_neighbours <- ifelse(num_individuals == 10, 10, 20)
         
-        # create directory structure if it doesn't exist
-        run_dir <- file.path(base_path, sprintf("run%d", run_num), tax_str)
-        if (!dir.exists(run_dir)) {
-          dir.create(run_dir, recursive = TRUE)
-        }
-        
         # generate the file path
         file_path <- file.path(
-          run_dir, 
+          tax_dir, 
           sprintf("%s_%dind_%dnei_%s.png", model, num_individuals, num_neighbours, tax_str)
         )
         
         # png device
         png(filename = file_path, width = 1400, height = 1000)
         
-        # plot layout
+        # png layout
         par(mfcol = c(3, 4), mai = rep(0.3, 4))
         
         # hnl environment
@@ -80,8 +89,8 @@ for (run_num in 1:num_runs) {
             # add collected data to triad1
             triad1 <- add_row(triad1, 
                               unlist(hgraph$triads(A)), 
-                              method_name = model, 
                               iteration = i,
+                              method_name = model, 
                               agents = num_individuals,
                               neighbour = num_neighbours, 
                               tax_rate = tax_rate, 
@@ -89,15 +98,17 @@ for (run_num in 1:num_runs) {
           }
         }
         
+        # Close png device
         dev.off()
-        
-        # save collected data to csv file
-        summary_file <- file.path(run_dir, sprintf("triad_summary_%s_%dind_%dnei_%s.csv", 
-                                                   model, num_individuals, num_neighbours, tax_str))
-        write.csv(triad1, summary_file, row.names = FALSE)
-        
       }
     }
+    
+    # save collected data as csv
+    summary_file <- file.path(data_dir, sprintf("triad_summary_run%d_%s.csv", run_num, tax_str))
+    write.csv(triad1, summary_file, row.names = FALSE)
+    
+    # reset data table for next run
+    triad1 <- data.frame()
   }
 }
 
