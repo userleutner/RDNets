@@ -12,7 +12,7 @@ initial_seed <- 123  # Initial seed for reproducibility
 tax_rates <- c(0.0, 0.05, 0.1, 0.3) 
 models <- c("null", "winlo") # Null Model an Winner Loser Model
 individuals <- c(10, 20, 50, 100, 200)
-base_path <- "images/systematic/" # path to safe generated image data
+base_path <- "output/images" # path to safe generated image data
 num_runs <- 5
 # df for collecting triad data
 triad1 <- data.frame()
@@ -28,7 +28,7 @@ for (run_num in 1:num_runs) {
     # directory structure
     run_dir <- file.path(base_path, sprintf("run%d", run_num))
     tax_dir <- file.path(run_dir, tax_str)
-    data_dir <- file.path("data")
+    data_dir <- file.path("output/data")
     if (!dir.exists(run_dir)) {
       dir.create(run_dir, recursive = TRUE)
     }
@@ -57,7 +57,7 @@ for (run_num in 1:num_runs) {
         png(filename = file_path, width = 1400, height = 1000)
         
         # png layout
-        par(mfcol = c(3, 4), mai = rep(0.3, 4))
+        par(mfcol = c(3, 4), mai = c(0.5, 0.5, 0.3, 0.3)) 
         
         # hnl environment
         hnl$new(n = num_individuals)
@@ -78,10 +78,12 @@ for (run_num in 1:num_runs) {
             hgraph$plot(A, vertex.color = cols, main = paste("iter =", i), layout = "sam")
             
             # barplot
-            barplot(table(hnl$token), main = paste("Gini =", round(hanna::simul$gini(hnl$token), 2)))
+            barplot(table(hnl$token), main = paste("Gini =", round(hanna::simul$gini(hnl$token), 2)), 
+                    xlab = "Number of Token", ylab= "Number of Agents")
             
             # dotchart
-            dotchart(unlist(hgraph$triads(A)))
+            dotchart(unlist(hgraph$triads(A)), 
+                     xlab = "Occurrence", ylab = "Triad Structure")
             
             # calculate Gini coefficient
             gini <- round(hanna::simul$gini(hnl$token), 2)
