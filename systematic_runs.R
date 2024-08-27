@@ -9,7 +9,7 @@ source("functions/add_row.R")
 
 # flexible parameters for simulation
 initial_seed <- 123  # Initial seed for reproducibility
-tax_rates <- c(0.0, 0.05, 0.1, 0.3) 
+tax_rates <- c(0.0, 0.1) 
 models <- c("null", "winlo") # Null Model an Winner Loser Model
 individuals <- c(10, 20, 50, 100, 200)
 base_path <- "output/images" # path to safe generated image data
