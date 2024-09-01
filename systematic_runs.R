@@ -1,5 +1,6 @@
 library(ggplot2)
-library(hanna) 
+library(hanna)
+library(ineq)
 # -------------------
 source("hnl.R")
 source("functions/add_row.R")
@@ -57,7 +58,7 @@ for (run_num in 1:num_runs) {
         png(filename = file_path, width = 1400, height = 1000)
         
         # png layout
-        par(mfcol = c(3, 4), mai = c(0.5, 0.5, 0.3, 0.3)) 
+        par(mfcol = c(4, 4), mai = c(0.5, 0.5, 0.3, 0.3))
         
         # hnl environment
         hnl$new(n = num_individuals)
@@ -87,7 +88,11 @@ for (run_num in 1:num_runs) {
             
             # calculate Gini coefficient
             gini <- round(hanna::simul$gini(hnl$token), 2)
-            
+           
+           # Lorenz curve plotting
+            plot(Lc(hnl$token), main = "Lorenz Curve", xlab = "Cumulative Share of Agents", ylab = "Cumulative Share of Tokens", col = "blue", lwd = 2)
+            abline(0, 1, col = "red", lty = 2)
+
             # add collected data to triad1
             triad1 <- add_row(triad1, 
                               unlist(hgraph$triads(A)), 
