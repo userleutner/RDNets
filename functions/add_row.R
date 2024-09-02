@@ -1,12 +1,13 @@
 # to create triad dataframe in simulation_1_20.rmd and systematic_runs.rmd
 
-add_row <- function(df, new_data, iteration, method_name, agents, neighbour, tax_rate, gini_coefficient) {
+add_row <- function(df, new_data, iteration, method_name, agents, neighbour, tax_rate, gini_coefficient, lambda) {
   new_row <- data.frame(
     iteration = iteration,
     method = method_name,
     agents = agents,
     neighbour = neighbour,
     tax_rate = tax_rate,
+    lambda = lambda,
     gini_coefficient = gini_coefficient,
     dd = as.numeric(new_data["dd"]),
     ds = as.numeric(new_data["ds"]),
