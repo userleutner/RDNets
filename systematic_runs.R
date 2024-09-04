@@ -73,25 +73,27 @@ for (run_num in 1:num_runs) {
         prev_tokens <- initial_tokens # Start with the initial tokens as the previous state
         resource_changes <- numeric(0)
         
-        # Iterate and plot
-        for (i in 1:20) {
+# ------ Iteration --------#
+        for (i in 1:30) {
           A <- hnl$iter(region = num_neighbours, tax_rate = tax_rate, model = model)
           A <- ifelse(is.na(A) | A == -1, 0, A)
           num_digits <- nchar(nrow(A))
           rownames(A) <- colnames(A) <- sprintf(paste0("%0", num_digits, "i"), 1:nrow(A)) 
           
-          # Calculate resource changes for lambda calculation
-          token_changes <- mean(abs(hnl$token - prev_tokens))
-          lambda <- if (i == 1) token_changes else mean(c(resource_changes, token_changes))
-          resource_changes <- c(resource_changes, token_changes) # Keep track of all changes
-          prev_tokens <- hnl$token # Update prev_tokens to the current state
-          
-          if (i %in% c(1, 5, 10, 20)) {
+            # Calculate resource changes for lambda calculation
+            # Lambda will always be calculated AFTER a game round
+            token_changes <- mean(abs(hnl$token - prev_tokens))
+            lambda <- if (i == 1) token_changes else mean(c(resource_changes, token_changes))
+            resource_changes <- c(resource_changes, token_changes) # keep track of all changes
+            prev_tokens <- hnl$token # update prev_tokens to the current state
+
+          # Colorcoding
+          if (i %in% c(1, 10, 20, 30)) {
             cols <- rep("chartreuse3", nrow(A))
             cols[hnl$token > 1] <- "orange"
             cols[hnl$token > 9] <- "firebrick3"
             
-            # Plotting via external hgraph function
+    # ------- Plots of simulations ----------#
             hgraph$plot(A, vertex.color = cols, main = paste("iter =", i), layout = "sam")
             
             # Barplot
@@ -106,10 +108,11 @@ for (run_num in 1:num_runs) {
             dotchart(unlist(hgraph$triads(A)), 
                      xlab = "Occurrence", ylab = "Triad Structure")
             
+    # ----- Calculations --------- #
             # Calculate Gini coefficient
             gini <- round(hanna::simul$gini(hnl$token), 2)
-
-            # Add collected data to collect_data
+        
+    # ------ Data collection ------ #
             collect_data <- add_row(collect_data, 
                                     unlist(hgraph$triads(A)), 
                                     iteration = i,
@@ -126,14 +129,15 @@ for (run_num in 1:num_runs) {
         # Close PNG device for the main plot
         dev.off()
         
-        # ---- Visualization Code ---- #
-        # Time Series Line Plot for Lambda
-        time_series_file <- file.path(lambda_dir, sprintf("timeseries_run%d_tax%02d_%s_%dind.png", 
-                                                        run_num, as.integer(tax_rate * 100), model, num_individuals))
-        png(filename = time_series_file, width = 800, height = 600)
-        plot(1:20, resource_changes, type="o", col="blue", xlab="Iteration", ylab="Lambda",
-             main=paste("Lambda over Time for", model, "Model with", num_individuals, "Agents"))
-        dev.off()
+# -------- Lambda changes over iterations ----- #
+            tax_percentage <- sprintf("%d%% Tax Rate", as.integer(substr(tax_str, 4, 5)))
+
+            time_series_file <- file.path(lambda_dir, sprintf("timeseries_run%d_%s_%s_%dind.png", 
+                                                  run_num, tax_str, model, num_individuals))
+            png(filename = time_series_file, width = 800, height = 600)
+            plot(1:30, resource_changes, type="o", col="blue", xlab="Iteration", ylab="Lambda",
+                 main=paste("Lambda over Time for", model, "Model with", num_individuals, "Agents and", tax_percentage))
+          dev.off()
         
       }
     }
