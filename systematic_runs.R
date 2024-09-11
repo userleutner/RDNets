@@ -1,6 +1,9 @@
 library(ggplot2)
 library(hanna)
 library(ineq)
+
+# for radar chart
+library(fmsb)
 # -------------------
 source("hnl.R")
 source("functions/add_row.R")
@@ -79,7 +82,9 @@ for (run_num in 1:num_runs) {
           A <- ifelse(is.na(A) | A == -1, 0, A)
           num_digits <- nchar(nrow(A))
           rownames(A) <- colnames(A) <- sprintf(paste0("%0", num_digits, "i"), 1:nrow(A)) 
-          
+
+
+  # ----- Calculations --------- #
             # Calculate resource changes for lambda calculation
             # Lambda will always be calculated AFTER a game round
             token_changes <- mean(abs(hnl$token - prev_tokens))
@@ -87,11 +92,28 @@ for (run_num in 1:num_runs) {
             resource_changes <- c(resource_changes, token_changes) # keep track of all changes
             prev_tokens <- hnl$token # update prev_tokens to the current state
 
+
           # Colorcoding
           if (i %in% c(1, 10, 20, 30)) {
             cols <- rep("chartreuse3", nrow(A))
             cols[hnl$token > 1] <- "orange"
             cols[hnl$token > 9] <- "firebrick3"
+
+           # Calculate Gini coefficient
+            gini <- round(hanna::simul$gini(hnl$token), 2)
+        
+    # ------ Data collection ------ #
+            
+            collect_data <- add_row(collect_data, 
+                                    unlist(hgraph$triads(A)), 
+                                    iteration = i,
+                                    method_name = model, 
+                                    agents = num_individuals,
+                                    neighbour = num_neighbours, 
+                                    tax_rate = tax_rate, 
+                                    gini_coefficient = gini,
+                                    lambda = round(lambda, 2)
+                                    )
             
     # ------- Plots of simulations ----------#
             hgraph$plot(A, vertex.color = cols, main = paste("iter =", i), layout = "sam")
@@ -104,27 +126,20 @@ for (run_num in 1:num_runs) {
             plot(Lc(hnl$token), main = "Lorenz Curve", xlab = "Cumulative Share of Agents", ylab = "Cumulative Share of Tokens", col = "blue", lwd = 2)
             abline(0, 1, col = "red", lty = 2)
 
-            # Dotchart
-            dotchart(unlist(hgraph$triads(A)), 
-                     xlab = "Occurrence", ylab = "Triad Structure")
-            
-    # ----- Calculations --------- #
-            # Calculate Gini coefficient
-            gini <- round(hanna::simul$gini(hnl$token), 2)
-        
-    # ------ Data collection ------ #
-            collect_data <- add_row(collect_data, 
-                                    unlist(hgraph$triads(A)), 
-                                    iteration = i,
-                                    method_name = model, 
-                                    agents = num_individuals,
-                                    neighbour = num_neighbours, 
-                                    tax_rate = tax_rate, 
-                                    gini_coefficient = gini,
-                                    lambda = lambda
-                                    )
-          }
-        }
+            # Radra Chart of triad structures
+            radar_data <- as.data.frame(t(unlist(hgraph$triads(A))))
+            # use sum of all current occurrences as max, to rely easier on percentages
+            max <- sum(radar_data)
+ 
+            radar_data <- rbind(rep(max,5) , rep(0,5) , radar_data)
+
+            radarchart( radar_data  , axistype=1,
+            pcol=rgb(0.2,0.5,0.5,0.9) , pfcol=rgb(0.2,0.5,0.5,0.5) , plwd=4 ,
+            cglcol="grey", cglty=1,
+            vlcex=1.8,title=paste("Triad Occurrence at Iteration ", i))
+
+      }
+    }
         
         # Close PNG device for the main plot
         dev.off()
