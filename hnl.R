@@ -14,9 +14,9 @@ hnl$tax_reinvest <- function(tax_rate) {
   self = hnl
   n = length(self$token)
   total_tax = 0
-  
+
   # Collect tax from each agent
-  for (k in 1:n) {
+ for (k in 1:n) {
     tax_amount = round(self$token[k] * tax_rate, 0)
     if (self$token[k] - tax_amount > 0) {
       self$token[k] = self$token[k] - tax_amount
@@ -24,18 +24,19 @@ hnl$tax_reinvest <- function(tax_rate) {
     }
   }
 # add carried-forward remainder to the total tax
-  total_tax = total_tax + self$carried_forward_remainder
+total_tax = total_tax + self$carried_forward_remainder
+
   
   # Redistribute equally
   redistribution = floor(total_tax / n)
   remainder = total_tax %% n
   
-  for (k in 1:n) {
+ for (k in 1:n) {
     self$token[k] = self$token[k] + redistribution
   }
    
   # update carried-forward remainder for the next round
-  self$carried_forward_remainder = remainder
+self$carried_forward_remainder = remainder
 }
 
 # -------- Game Iteration ------- #
@@ -104,7 +105,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=TRUE, tax_rate=0.
                 }
             } else {
                 # winlo(oser) model
-                if (toki+tokj==0 | self$Coop[i,j] == 1) {
+                if (toki+tokj==0) {
                     A[i,ci]=0
                     A[j,i]=0
                 } else if (toki == 0) {
@@ -115,8 +116,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=TRUE, tax_rate=0.
                     A[j,i]= -1
                 } else {
                     # both still have token
-                    s=c(rep(1,toki),rep(-1,tokj))
-                    s=sample(s,2)
+                    s = sample(c(rep(1, toki), rep(-1, tokj)), 2)
                     if (mean(s)==0) {
                         A[i,j]=0
                         A[j,i]=0
