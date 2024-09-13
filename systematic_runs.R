@@ -94,10 +94,11 @@ for (run_num in 1:num_runs) {
 
 
           # Colorcoding
+          # starting at 100 token after iterations of winning or losing (in row) group change
           if (i %in% c(1, 10, 20, 30)) {
             cols <- rep("chartreuse3", nrow(A))
-            cols[hnl$token > 1] <- "orange"
-            cols[hnl$token > 9] <- "firebrick3"
+            cols[hnl$token > 10] <- "orange" 
+            cols[hnl$token > 90] <- "firebrick3"
 
            # Calculate Gini coefficient
             gini <- round(hanna::simul$gini(hnl$token), 2)
