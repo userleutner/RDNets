@@ -40,7 +40,7 @@ self$carried_forward_remainder = remainder
 }
 
 # -------- Game Iteration ------- #
-hnl$iter <- function (games=10,model="winlo",region=9,progress=TRUE, tax_rate=0.1) {
+hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0.1) {
     self = hnl
     n=length(self$token)
     idx=c(-region:-1,1:region)
@@ -74,7 +74,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=TRUE, tax_rate=0.
             toki = max(toki, 0)
             tokj = max(tokj, 0)
  
-            spoints=5
+            spoints=10
             if (progress) {
                 if (min(c(toki,tokj))>25) {
                     spoints=10
