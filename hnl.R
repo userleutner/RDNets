@@ -1,5 +1,5 @@
 hnl = new.env()
-hnl$new <- function (n, token = rep(5, n)) {
+hnl$new <- function (n, token = rep(50, n)) {
   self = hnl
   self$token = token
   }
@@ -56,30 +56,34 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=TRUE, tax_rate=0.
             seq=c(start:n,1:(start-1))
         }
         for (i in seq) {
-            # get current game partner
-            ci = sample(idx,1)
-            if ((i+ci)<0) {
-                j=n+(i+ci)
-            } else if ((i+ci)>n) {
-                j=(i+ci)-n
-            } else if ((i+ci)==0) {
-                j=n
-            } else {
-                j=i+ci
-            }
+        # Get current game partner
+        ci = sample(idx, 1)
+        j = (i + ci) %% n
+        if (j == 0) j = n
+
+        # Ensure partner has valid index
+        while (j == i) {
+        ci = sample(idx, 1)
+        j = (i + ci) %% n
+        if (j == 0) j = n
+        }
             toki=self$token[i]
             tokj=self$token[j]
+            # ensure the token amount does not become zero
+            # an amount below 0 would be reset to 0
+            toki = max(toki, 0)
+            tokj = max(tokj, 0)
  
-            spoints=1
+            spoints=5
             if (progress) {
-                if (min(c(toki,tokj))>5) {
-                    spoints=2
+                if (min(c(toki,tokj))>25) {
+                    spoints=10
                 }
-                if (min(c(toki,tokj))>10) {
-                    spoints=3
+                if (min(c(toki,tokj))>50) {
+                    spoints=15
                 }
-                if (min(c(toki,tokj))>20) {
-                    spoints=4
+                if (min(c(toki,tokj))>100) {
+                    spoints=20
                 }
             }
             if (model=="null") {
@@ -105,8 +109,8 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=TRUE, tax_rate=0.
                 }
             } else {
                 # winlo(oser) model
-                if (toki+tokj==0) {
-                    A[i,ci]=0
+                if (toki+tokj == 0) {
+                    A[i,j]=0
                     A[j,i]=0
                 } else if (toki == 0) {
                     A[i,j]= -1
@@ -116,26 +120,25 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=TRUE, tax_rate=0.
                     A[j,i]= -1
                 } else {
                     # both still have token
-                    s = sample(c(rep(1, toki), rep(-1, tokj)), 2)
-                    if (mean(s)==0) {
-                        A[i,j]=0
-                        A[j,i]=0
+                    s = c(rep(1, toki), rep(-1, tokj))
+                    s = sample(s, 2)
+                    if (mean(s) == 0) {
+                        A[i, j] = 0
+                        A[j, i] = 0
                     } else if (mean(s) > 0) {
-                        A[i,j] = 1
-                        A[j,i] = -1
-                        self$token[i]=self$token[i]+spoints
-                        self$token[j]=self$token[j]-spoints
-                       
+                        A[i, j] = 1
+                        A[j, i] = -1
+                        self$token[i] = self$token[i] + spoints
+                        self$token[j] = self$token[j] - spoints
                     } else {
-                        A[i,j] = -1
-                        A[j,i] =  1
-                        self$token[i]=self$token[i]-spoints
-                        self$token[j]=self$token[j]+spoints
+                        A[i, j] = -1
+                        A[j, i] = 1
+                        self$token[i] = self$token[i] - spoints
+                        self$token[j] = self$token[j] + spoints
                     }
                 }
             }
         }
-        
         self$tax_reinvest(tax_rate)
     }
     invisible(A)
