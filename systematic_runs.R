@@ -67,7 +67,7 @@ for (run_num in 1:num_runs) {
         png(filename = file_path, width = 1400, height = 1000)
         
         # PNG layout
-        par(mfcol = c(4, 4), mai = c(0.5, 0.5, 0.3, 0.3) + 0.03) 
+        par(mfcol = c(4, 4), mai = c(0.5, 0.6, 0.73, 0.3) + 0.08,  mgp = c(3.5, 1, 0)) 
         
         # Initialize the hnl environment
         hnl$new(n = num_individuals)
@@ -117,14 +117,21 @@ for (run_num in 1:num_runs) {
                                     )
             
     # ------- Plots of simulations ----------#
-            hgraph$plot(A, vertex.color = cols, main = paste("iter =", i), layout = "sam")
+
+            hgraph$plot(A, vertex.color = cols, main = paste("iter =", i), layout = "sam", , cex.main = 2)
             
             # Barplot
             barplot(table(hnl$token), main = paste("Gini =", round(hanna::simul$gini(hnl$token), 2)), 
-                    xlab = "Number of Token", ylab= "Number of Agents")
+                    xlab = "Number of Token", ylab= "Number of Agents", cex.main = 2, cex.axis = 1.5, cex.lab = 2, cex.names = 1.5, yaxt = "n", # Suppressing default y-axis
+                    names.arg = names(table(hnl$token)), # Ensure labels are provided
+                    las = 2)  
+            # add integers y axis label
+            axis(2, at = seq(0, max(table(hnl$token)), by = 1), las = 1, cex.axis = 1.5)  # las=1 for horizontal labels
+                    
 
             # Lorenz curve plot
-            plot(Lc(hnl$token), main = "Lorenz Curve", xlab = "Cumulative Share of Agents", ylab = "Cumulative Share of Tokens", col = "blue", lwd = 2)
+            plot(Lc(hnl$token), main = "Lorenz Curve", xlab = "Cumulative Share of Agents", ylab = "Cumulative Share of Tokens", col = "blue", lwd = 2, 
+            cex.main = 2, cex.lab = 2, cex.axis = 2)
             abline(0, 1, col = "red", lty = 2)
 
             # Radra Chart of triad structures
@@ -136,13 +143,14 @@ for (run_num in 1:num_runs) {
 
             radarchart( radar_data  , axistype=1,
             pcol=rgb(0.2,0.5,0.5,0.9) , pfcol=rgb(0.2,0.5,0.5,0.5) , plwd=4 ,
-            cglcol="grey", cglty=1,
-            vlcex=1.8,title=paste("Triad Occurrence at Iteration ", i))
+            cglcol="dimgrey", cglty=1,
+            vlcex=1.8,title=paste("Triad Occurrence at Iteration ", i), cex.main = 2)
 
       }
     }
+        mtext(paste(model, " Model with ", num_individuals, " Agents and a Tax Rate of ", tax_rate),
+        outer = TRUE, cex = 1.8, line = -2.0, font = 2)        # Close PNG device for the main plot
         
-        # Close PNG device for the main plot
         dev.off()
         
 # -------- Lambda changes over iterations ----- #
