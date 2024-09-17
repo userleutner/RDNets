@@ -139,6 +139,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0
                 }
             }
         }
+        self$token[self$token < 0] = 0
         self$tax_reinvest(tax_rate)
     }
     invisible(A)
