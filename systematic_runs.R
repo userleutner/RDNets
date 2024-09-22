@@ -126,7 +126,7 @@ for (run_num in 1:num_runs) {
                     names.arg = names(table(hnl$token)), # Ensure labels are provided
                     las = 2)  
             # add integers y axis label
-            axis(2, at = seq(0, max(table(hnl$token)), by = 1), las = 1, cex.axis = 1.5)  # las=1 for horizontal labels
+            axis(2, at = seq(0, max(table(hnl$token)), by = 1), las = 1, cex.axis = 1.8)  # las=1 for horizontal labels
                     
 
             # Lorenz curve plot
