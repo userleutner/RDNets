@@ -160,7 +160,9 @@ for (run_num in 1:num_runs) {
                                                   run_num, tax_str, model, num_individuals))
             png(filename = time_series_file, width = 800, height = 600)
             plot(1:30, resource_changes, type="o", col="blue", xlab="Iteration", ylab="Lambda",
-                 main=paste("Lambda over Time for", model, "Model with", num_individuals, "Agents and", tax_percentage))
+                 main=paste("Lambda over Time for", model, "Model with", num_individuals, "Agents and", tax_percentage),
+                 cex.main= 1.8,
+                 ylim = c(0,50))
           dev.off()
         
       }
