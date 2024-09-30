@@ -1,5 +1,5 @@
-**T**oken **R**edistribution & **I**nteraction in **B**alanced **E**cosystems **S**imulation
+**R**esource **D**istribution **Net**works
 
 We test a Winner-Loser-Model and Null model based on the work of Hermanussen et al. 2023 \\
-Additionally, we tax the agents based on their current ressource holding power (RHP), measured by the amount of owned token. We apply a 10% tax to agents (rounded to integers), who are able to pay the tribute, without ending up with a RHP of 0. The collected token get equally redistributed among all(!) agents, with the rest being randomly redistributed. The taxation process starts after the games (model) between the agents. \\
-We have seen that in the winner-loser model and null models alone, a disbalance of distributed ressources arises quickly, faster of course in the winner.loser model, but it also develops in the randomized null model. We want to investigate how taxation impacts the distribution of ressources in the two systems and how is influences the social interactions (triad structures) between the agents. Further we may want to answer the question, of how it changes the results, if we redistribute the tax only among the "poor" agents, after collecting only from the "rich".
+Additionally, we tax the agents based on their current ressource holding power (RHP), measured by the amount of owned token. We apply a 10% tax to agents (rounded to integers), who are able to pay the tribute, without ending up with a RHP of 0. The collected token get equally redistributed among all(!) agents, with the rest being caried over into the next iteration. The taxation process starts after agents have finished their interaction rounds. \\
+
