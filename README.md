@@ -1,1 +1,1 @@
-**T**oken **R**edistribution & **I**nteraction in **B**alanced **E**cosystems **S**imulation
+**R**esource **D**istribution **Net**works
