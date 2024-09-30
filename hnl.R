@@ -15,7 +15,7 @@ hnl$tax_reinvest <- function(tax_rate) {
   n = length(self$token)
   total_tax = 0
   
-  print(paste("Total tokens before tax:", sum(self$token), "Agents:", n))
+ # print(paste("Total tokens before tax:", sum(self$token), "Agents:", n))
   
   # Collect tax from each agent
   for (k in 1:n) {
@@ -25,11 +25,11 @@ hnl$tax_reinvest <- function(tax_rate) {
       total_tax = total_tax + tax_amount
     }
   }
-  print(paste("Total tax collected:", total_tax))
+ # print(paste("Total tax collected:", total_tax))
 
   # Add carried-forward remainder to total tax
   total_tax <- total_tax + self$carried_forward_remainder
-  print(paste("Total tax after adding carried-forward remainder:", total_tax))
+ # print(paste("Total tax after adding carried-forward remainder:", total_tax))
 
   # Redistribute the tax
   if (total_tax > 0) {
@@ -39,16 +39,17 @@ hnl$tax_reinvest <- function(tax_rate) {
     for (k in 1:n) {
       self$token[k] = self$token[k] + redistribution
     }
-    print(paste("Redistribution amount per agent:", redistribution))
-    print(paste("Remainder to be carried forward:", remainder))
+   # print(paste("Redistribution amount per agent:", redistribution))
+   # print(paste("Remainder to be carried forward:", remainder))
 
     # Store the remainder to carry forward
     self$carried_forward_remainder = remainder
   }
   
   total_tokens_after = sum(self$token)
-  print(paste("Total tokens after redistribution:", total_tokens_after))
+ # print(paste("Total tokens after redistribution:", total_tokens_after))
 }
+
 
 hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0.1) {
     self = hnl
@@ -65,7 +66,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0
         } else {
             seq=c(start:n,1:(start-1))
         }
-       print(paste("Starting game", g, "with tokens:", paste(self$token, collapse=", ")))
+      # print(paste("Starting game", g, "with tokens:", paste(self$token, collapse=", ")))
 
         for (i in seq) {
         # Get current game partner
@@ -105,7 +106,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0
                     A[i, j] = 1
                     A[j, i] = -1
                     if (self$token[j] > 0) {
-                        # Prevent negative tokens here
+                        # Prevent negative tokens
                         if (self$token[j] >= spoints) {
                             self$token[i] = self$token[i] + spoints
                             self$token[j] = self$token[j] - spoints
@@ -118,7 +119,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0
                     A[i, j] = -1
                     A[j, i] = 1
                     if (self$token[i] > 0) {
-                        # Prevent negative tokens here
+                        # Prevent negative tokens 
                         if (self$token[i] >= spoints) {
                             self$token[i] = self$token[i] - spoints
                             self$token[j] = self$token[j] + spoints
@@ -150,7 +151,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0
                         A[i, j] = 1
                         A[j, i] = -1;
 
-                        # Prevent negative tokens here
+                        # Prevent negative tokens 
                         if (self$token[j] >= spoints) {
                             self$token[i] = self$token[i] + spoints;
                             self$token[j] = self$token[j] - spoints;
@@ -162,7 +163,7 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0
                         A[i, j] = -1;
                         A[j, i] = 1;
 
-                        # Prevent negative tokens here
+                        # Prevent negative tokens 
                         if (self$token[i] >= spoints) {
                             self$token[i] = self$token[i] - spoints;
                             self$token[j] = self$token[j] + spoints;
@@ -174,12 +175,12 @@ hnl$iter <- function (games=10,model="winlo",region=9,progress=FALSE, tax_rate=0
                 }
             }
 
-            print(paste("Tokens after interaction between", i, "and", j, ":", 
-                        "Agent", i, "=", self$token[i], "Agent", j, "=", self$token[j]))
+           # print(paste("Tokens after interaction between", i, "and", j, ":", 
+                   #     "Agent", i, "=", self$token[i], "Agent", j, "=", self$token[j]))
         }
         
         self$token[self$token < 0] = 0
-        print(paste("Tokens before tax collection:", paste(self$token, collapse=", ")))
+       # print(paste("Tokens before tax collection:", paste(self$token, collapse=", ")))
 
         self$tax_reinvest(tax_rate)
     }
