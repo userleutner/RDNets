@@ -9,13 +9,14 @@ source("hnl.R")
 source("functions/add_row.R")
 # ------------------------------
 
-# Flexible parameters for simulation
+# Flexible parameters for simulation (should be seen as "fixed" for reproducibility)
 initial_seed <- 123  # Initial seed for reproducibility
 tax_rates <- c(0.1, 0.0) 
 models <- c("null", "winlo") # Null Model and Winner Loser Model
 individuals <- c(10, 20, 50, 100, 200)
 base_path <- "output/images" # Path to save generated image data
 num_runs <- 5
+lamda_data <- list() # store lambda for each model for combined plots
 
 # Loop through all combinations of parameters
 for (run_num in 1:num_runs) {
@@ -64,7 +65,7 @@ for (run_num in 1:num_runs) {
         )
         
         # PNG device for the main plot
-        png(filename = file_path, width = 1400, height = 1000)
+        png(filename = file_path, width = 1100, height = 1400)
         
         # PNG layout
         par(mfcol = c(4, 4), mai = c(0.5, 0.6, 0.73, 0.3) + 0.08,  mgp = c(3.5, 1, 0)) 
@@ -178,3 +179,6 @@ for (run_num in 1:num_runs) {
 }
 
 cat("All runs completed and files saved.\n")
+
+# ------------------------------------------------
+# Create the combined Lambda plots about the exchange changes
