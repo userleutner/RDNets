@@ -65,7 +65,7 @@ for (run_num in 1:num_runs) {
         )
         
         # PNG device for the main plot
-        png(filename = file_path, width = 1100, height = 1400)
+        png(filename = file_path, width = 1300, height = 1300)
         
         # PNG layout
         par(mfcol = c(4, 4), mai = c(0.5, 0.6, 0.73, 0.3) + 0.08,  mgp = c(3.5, 1, 0)) 
