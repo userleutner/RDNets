@@ -1,9 +1,8 @@
 library(ggplot2)
 library(hanna)
 library(ineq)
-
-# for radar chart
 library(fmsb)
+
 # -------------------
 source("hnl.R")
 source("functions/add_row.R")
