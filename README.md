@@ -1,56 +1,87 @@
-# **R**esource **D**istribution **Net**works
+# Resource Distribution Networks (RDNets)
 
-`RDNets` contains code for the study titled "The Impact of a 10% Tax Rate and Redistribution on Resource Concentration in Networks". The study simulates the redistribution of resources (tokens) among agents with (and without) a fixed 10% tax rate and tracks the resulting inequality over multiple iterations.
+## Overview
 
-## Key Scripts
-### `functions/hnl.R`
-This is the core script of the repository and contains the simulation model. It defines the following main components:
+The `RDNets` repository contains code for the study titled **"The Impact of a 10% Tax Rate and Redistribution on Resource Concentration in Networks."** The study simulates the redistribution of resources (tokens) among agents under various conditions, including a fixed 10% tax rate, and tracks the resulting inequality metrics over multiple iterations.
 
-- **`hnl$new()`**: Initializes the environment and defines agent tokens.
-- **`hnl$tax_reinvest()`**: Handles the collection of tax and the redistribution of resources among agents, including the handling of carried-forward remainders.
-- **`hnl$iter()`**: Runs the simulation for a specified number of games (iterations), utilizing different models (Null or Winner-Loser) and adjusting for tax rate and agent resource levels.
+## Key Features
 
-### `functions/add_row.R`
-This helper function is used to append new data rows to the results of each simulation.
+### Simulation Models
 
-## Handling Simulations
+Two primary models are implemented:
 
-The simulations are executed by running the main function in `hnl.R`, which simulates the interaction of agents within a network. The primary steps are as follows:
+- **Null Model**: Random interactions without a structured win/lose dynamic.
+- **Winner-Loser Model**: Incorporates structured interactions where some agents gain and others lose based on predefined rules.
 
-1. **Initialize Simulation**: Set the initial number of agents and their token amounts using `hnl$new()`. Each agent starts with a set amount of tokens (default of 50 tokens).
+### Tax Strategy
 
-2. **Run Simulation**: Call the `hnl$iter()` function to start the simulation. The number of iterations (games) and the model type (Null or Winner-Loser) can be customized as arguments to this function.
+- A fixed 10% tax rate is applied.
+- Collected taxes are redistributed equally among all agents.
+- Any remainders from redistribution are carried forward to subsequent iterations to avoid loss of resources.
 
-   - The `iter()` function simulates agent interactions and resource transfers based on the model.
-   - Tax is applied at the end of each iteration with the `tax_reinvest()` function, adjusting each agent's tokens based on the specified tax rate.
+### Metrics
 
-3. **Tax Strategy**: The model applies a 10% tax rate (or other values as specified) and redistributes the collected tax evenly among all agents. The remainder from this redistribution is carried forward to the next iteration, ensuring that no tax is lost.
+The simulation tracks:
 
-4. **Run Multiple Simulations**: The process is repeated across multiple runs (5 runs by default). Each run results in different distributions of resources, which are stored in both tabular (CSV) and graphical formats (images).
+- **Gini Coefficient**: Measures inequality in resource distribution.
+- **Lambda-Factor**: Evaluates resource dynamics and redistribution effects.
+- **Triad Structures**: Examines patterns of interactions between agents to provide insight into individual relationships and their impact on resource distribution.
 
-## Output
+### Flexibility
 
-### Data Files
-The results of each simulation are summarized in CSV files located in the `output/data/` folder. These files contain key metrics for each iteration, including:
-- The total number of tokens for each agent at the end of each run.
-- Calculations for the Gini coefficient and lambda-factor.
-- Occurrence freqeuncies of the measured triad structures.
+The number of agents, tax rates, models, and iterations can be customized. Simulations are reproducible by setting an initial random seed.
 
-### Images
-Graphical representations of the simulation data are stored in the `output/images/` directory. These include plots of resource distribution over time, Gini coefficient visualizations, and lambda-factor trend charts.
+## Repository Structure
 
-## Running the Simulations
+### Scripts
 
-To run the simulations, follow these steps:
+#### `functions/hnl.R`
 
-1. **Install Required Packages**: Ensure you have the necessary R packages installed to run the scripts. You may need packages such as `ggplot2`, `hanna`, `fmsb` for plotting and `dplyr` and `ineq` for data manipulation.
+This is the core simulation script. Key components include:
 
-2. **Load the Script to Build the Environment**: Open and run the `hnl.R` script in an R environment. You can adjust the parameters (number of agents, tax rates, and model type) by modifying the function calls within the script.
+- ``: Initializes agents with a specified number of tokens (default: 50 per agent).
+- ``: Applies tax and redistributes resources, carrying forward remainders.
+- ``: Runs simulations for a specified number of iterations, with adjustable models and tax rates.
 
-3. **Start the Simulation**: Call the `hnl$iter()` function, specifying the number of iterations, tax rate, model type, and any other relevant parameters. Example:
+#### `functions/add_row.R`
 
-   ```r
-   hnl$iter(games = 10, model = "winlo", region = 9, progress = TRUE, tax_rate = 0.1)
+A helper script used to append results during simulations.
+
+#### `systematic_runs.R`
+
+Defines flexible and reproducible parameters for running systematic simulations. Key parameters include:
+
+- `tax_rates`: A vector of tax rates (e.g., 0.1, 0.0).
+- `models`: A list of models (`"null"` or `"winlo"`).
+- `individuals`: A range of agent counts (e.g., 10, 20, 50, 100, 200).
+
+### Output
+
+#### Data Files
+
+- Stored in `output/data/`.
+- Includes plots showing resource distribution trends, Gini coefficient dynamics, lambda-factor trajectories, and triad structures.
+
+#### Graphical Results
+
+- Stored in `output/images/`.
+- Includes plots showing resource distribution trends, Gini coefficient dynamics, and lambda-factor trajectories.
+
+
+### Prerequisite
+The statisical Analysis was performed using R 4.3.0\
+R Core Team (2023). _R: A Language and Environment for Statistical
+  Computing_. R Foundation for Statistical Computing, Vienna, Austria.
+  <https://www.R-project.org/>.
+  
+The follwing R packages where used:
+
+- `ggplot2`   H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+- `dplyr`  Wickham H, François R, Henry L, Müller K, Vaughan D (2023). _dplyr: A Grammar of Data Manipulation_. R package version 1.1.4, <https://CRAN.R-project.org/package=dplyr>.
+- `ineq`    Zeileis A (2014). _ineq: Measuring Inequality, Concentration, and Poverty_. R package version 0.2-13, <https://CRAN.R-project.org/package=ineq>.
+- `fmsb`  Nakazawa M (2024). _fmsb: Functions for Medical Statistics Book with some Demographic Data_. R package version 0.7.6, <https://CRAN.R-project.org/package=fmsb>.
 
 
 ## License
+
+This repository is open-source and available under the MIT License. See the `LICENSE` file for more details.
