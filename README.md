@@ -76,6 +76,7 @@ R Core Team (2023). _R: A Language and Environment for Statistical
   
 The follwing R packages where used:
 
+- `hanna`    Groth D, Potsdam Uo (2023). _hanna: Winner-looser effects for social network efficiency simulated using Monte Carlo simulations_. R package version 0.2.1.
 - `ggplot2`   H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
 - `dplyr`  Wickham H, François R, Henry L, Müller K, Vaughan D (2023). _dplyr: A Grammar of Data Manipulation_. R package version 1.1.4, <https://CRAN.R-project.org/package=dplyr>.
 - `ineq`    Zeileis A (2014). _ineq: Measuring Inequality, Concentration, and Poverty_. R package version 0.2-13, <https://CRAN.R-project.org/package=ineq>.
