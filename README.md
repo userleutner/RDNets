@@ -74,7 +74,7 @@ R Core Team (2023). _R: A Language and Environment for Statistical
   Computing_. R Foundation for Statistical Computing, Vienna, Austria.
   <https://www.R-project.org/>.
   
-The follwing R packages where used:
+The following R packages where used:
 
 - `hanna`    Groth D, Potsdam Uo (2023). _hanna: Winner-looser effects for social network efficiency simulated using Monte Carlo simulations_. R package version 0.2.1.
 - `ggplot2`   H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
