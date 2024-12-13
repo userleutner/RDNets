@@ -68,7 +68,7 @@ Defines flexible and reproducible parameters for running systematic simulations.
 - Includes plots showing resource distribution trends, Gini coefficient dynamics, and lambda-factor trajectories.
 
 
-### Prerequisite
+### Prerequisities
 The statisical Analysis was performed using R 4.3.0\
 R Core Team (2023). _R: A Language and Environment for Statistical
   Computing_. R Foundation for Statistical Computing, Vienna, Austria.
