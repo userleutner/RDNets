@@ -84,7 +84,7 @@ The following R packages where used:
 
 ## Authors
 
-The code was developed in cooperation by:
+The code was developed in cooperation of:
 - Sarah Leutner
 - Detlef Groth
 
