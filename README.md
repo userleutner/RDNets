@@ -82,7 +82,13 @@ The following R packages where used:
 - `ineq`    Zeileis A (2014). _ineq: Measuring Inequality, Concentration, and Poverty_. R package version 0.2-13, <https://CRAN.R-project.org/package=ineq>.
 - `fmsb`  Nakazawa M (2024). _fmsb: Functions for Medical Statistics Book with some Demographic Data_. R package version 0.7.6, <https://CRAN.R-project.org/package=fmsb>.
 
+## Authors
 
+The code was developed in cooperation by:
+- Sarah Leutner
+- Detlef Groth
+
+  
 ## License
 
 This repository is open-source and available under the MIT License. See the `LICENSE` file for more details.
